@@ -1,17 +1,12 @@
-import os
 # Hilf bei starten des Apps
 import os
 import re as re
 import tkinter as tk
-from tkinter import filedialog, Text
-from tkinter import filedialog, Text
-from tkinter import ttk
+from tkinter import filedialog
 from tkinter import ttk
 
-apps = []
 root = tk.Tk()
 save_file_directory = os.path.dirname(os.path.abspath(__file__)) + "\\templates\\"
-
 
 root.title("Autostart")
 name = "Create Template"
@@ -23,7 +18,7 @@ def deleteApp():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    e1.delete(0,"end")
+    e1.delete(0, "end")
     dropdown.delete(0, "end")
 
     name = "Create Template"
@@ -36,7 +31,7 @@ def show_apps(apps):
 
 
 def get_apps():
-    path = "templates\\" + dropdown.get()
+    path = "templates\\" + e1.get()
     if os.path.isfile(path):
         with open(path, "r") as f:
             tempApps = f.read()
@@ -54,7 +49,8 @@ def loadFile():
 
 def CreateTemplate():
     if e1.get() == '':
-        label = tk.Label(frame,text="Du hast noch keinen name für dein Template ausgesucht \n Erstelle noch mals einen Template",
+        label = tk.Label(frame,
+                         text="Du hast noch keinen name für dein Template ausgesucht \n Erstelle noch mals einen Template",
                          bg="gray")
         label.pack()
         return
@@ -84,7 +80,7 @@ def addApp():
     filename = filedialog.askopenfilename(initialdir="/", title="Select File",
                                           filetypes=(("executables", "*.exe"), ("all files", "*.*")))
 
-    apps = get_apps() is None if get_apps() else []
+    apps = get_apps() if get_apps() is not None else []
     apps.append(filename)
 
     show_apps(apps)
@@ -105,7 +101,8 @@ canvas.pack()
 frame = tk.Frame(root, bg="white")
 frame.place(relwidth=0.8, relheight=0.76, relx=0.1, rely=0.1)
 
-Createtemplate = tk.Button(root, text="Create Template", padx=8, pady=8, fg="black", bg="#A9BCF5", command=CreateTemplate)
+Createtemplate = tk.Button(root, text="Create Template", padx=8, pady=8, fg="black", bg="#A9BCF5",
+                           command=CreateTemplate)
 Createtemplate.place(x=50, y=455)
 
 openFile = tk.Button(root, text="Add App", padx=8, pady=8, fg="black", bg="#A9BCF5", command=addApp)
@@ -129,9 +126,5 @@ TemplateName.place(x=50, y=30)
 
 e1 = tk.Entry(root)
 e1.place(x=160, y=30)
-
-for app in apps:
-    label = tk.Label(frame, text=app)
-    label.pack()
 
 root.mainloop()
