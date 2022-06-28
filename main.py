@@ -9,19 +9,16 @@ root = tk.Tk()
 save_file_directory = os.path.dirname(os.path.abspath(__file__)) + "\\templates\\"
 
 root.title("Autostart")
-name = "Create Template"
 
 
 def deleteApp():
-    global name
-
+    #Wird alles neu geladen, falls man einen anders Template wollte
     for widget in frame.winfo_children():
         widget.destroy()
 
     e1.delete(0, "end")
     dropdown.delete(0, "end")
 
-    name = "Create Template"
 
 
 def show_apps(apps):
@@ -41,13 +38,12 @@ def get_apps():
 
 
 def loadFile():
-    global name
-
     e1.insert(0, dropdown.get())
+    #Anzeige der Apps die man ausgewählt hat.
     show_apps(get_apps())
 
-
 def CreateTemplate():
+    #SChaut ob das neue Templte einen Namen hat
     if e1.get() == '':
         label = tk.Label(frame,
                          text="Du hast noch keinen name für dein Template ausgesucht \n Erstelle noch mals einen Template",
@@ -59,12 +55,16 @@ def CreateTemplate():
 
 
 def addApp():
+
+    #Schaut ob ein Template gewählt ist.
     if e1.get() == '':
         label = tk.Label(frame, text="Du hast noch keinen Template ausgesucht \n Wähle ein Template",
                          bg="gray")
         label.pack()
         return
 
+
+    #Regex überprüfung auf Bustaben und Zahlen
     match = re.findall("(\w)", e1.get())
     if len(match) != len(e1.get()):
         label = tk.Label(frame, text="Invalid filename",
@@ -76,25 +76,26 @@ def addApp():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    # Man kan nur Ausführbare datein anwenden.
+    # Man kan nur Ausführbare datein aussuchen.
     filename = filedialog.askopenfilename(initialdir="/", title="Select File",
                                           filetypes=(("executables", "*.exe"), ("all files", "*.*")))
-
+    #Alle Apps die man hat werden in das Arryy geladen
     apps = get_apps() if get_apps() is not None else []
     apps.append(filename)
 
     show_apps(apps)
-
+    #Erstellte ein Neues File wenn es nicht vorhanden ist falls es da ist wird es es erweitert
     with open(save_file_directory + e1.get(), "w") as f:
         for app in apps:
             f.write(app + ",")
 
 
 def runapp():
+    #Startet alle Apps die man Ausgewählt hat.
     for app in get_apps():
         os.startfile(app)
 
-
+#GUI Ansicht
 canvas = tk.Canvas(root, height=500, width=500, bg="#A9BCF5")
 canvas.pack()
 
